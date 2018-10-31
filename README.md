@@ -3,7 +3,7 @@ Exploring the effects of context in image classification
 
 
 ## Instructions
-Download the data and add it to `res/` directory. Your directory tree should look like this:
+1. Download the data and add it to `res/` directory. Your directory tree should look like this:
 ```
 context-free-network/
   src/
@@ -14,9 +14,9 @@ context-free-network/
     annotations/
 ```
 
-`cd` into `src/`
-run `make`
-run `jupyter notebook`
+2. `cd` into `src/`
+3. Run `make`
+4. Run `jupyter notebook`
 
 
 ## To Do
