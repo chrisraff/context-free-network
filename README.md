@@ -14,15 +14,15 @@ context-free-network/
     annotations/
 ```
 
-cd into `src/`
+`cd` into `src/`
 run `make`
 run `jupyter notebook`
 
 
 ## To Do
-1. get the segmentation mask for each image
-2. train a basic pytorch model on the data
-3. make function to alter background of image
+1. Get the segmentation mask for each image
+2. Train a basic pytorch model on the data
+3. Make function to alter background of image
 
 
 ## Resources
