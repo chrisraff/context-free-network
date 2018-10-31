@@ -1,5 +1,10 @@
 # Project-specific
 res/
+annotations/
+train2017/
+test2017/
+val2017/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
