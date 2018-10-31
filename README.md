@@ -1,24 +1,28 @@
-# context-free-network
-Exploring the effect of context in image classification
+# Context Free Network
+Exploring the effects of context in image classification
 
 
-## Instructions to run code
-directories should look like this:
+## Instructions
+Download the data and add it to `res/` directory. Your directory tree should look like this:
+```
 context-free-network/
-	train2017/
-	test2017/
-	val2017/
-	annotations/
+  src/
+  res/
+    train2017/
+    test2017/
+    val2017/
+    annotations/
+```
 
 cd into src/
 run `make`
 run `jupyter notebook`
 
 
-## TO DO
-get the segmentation mask for each image
-train a basic pytorch model on the data
-make function to alter background of image
+## To Do
+1. get the segmentation mask for each image
+2. train a basic pytorch model on the data
+3. make function to alter background of image
 
 
 ## Resources
