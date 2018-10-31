@@ -1,2 +1,6 @@
 python api resource
 https://github.com/cocodataset/cocoapi
+
+move contents of notes into readme
+
+add todo list to readme
