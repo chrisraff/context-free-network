@@ -14,7 +14,7 @@ context-free-network/
     annotations/
 ```
 
-cd into src/
+cd into `src/`
 run `make`
 run `jupyter notebook`
 
