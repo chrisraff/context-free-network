@@ -9,11 +9,12 @@ from skimage.transform import resize as imresize
 from time import sleep
 import scipy.misc
 from tqdm import tqdm
+import os
 
 
-target_class_names = "broccoli".split()
+target_class_names = "broccoli horse".split()
 
-datatypes = "val2017 test2017".split()
+datatypes = "val2017 train2017".split()
 
 for dataType in datatypes:
     dataDir = '../res'
@@ -27,9 +28,19 @@ for dataType in datatypes:
 
     # display COCO categories and supercategories
     categories = coco.loadCats(coco.getCatIds())
+    category_name_dict = {}
+    for category in categories:
+        if category['name'] not in target_class_names: continue
+        category_name_dict[category['id']] = category['name']
+
+        # make folders for classes
+        for output_dir in [processed_images_path, processed_masks_path]:
+            try:
+                os.mkdir('{}/{}'.format(output_dir, category['name']))
+            except FileExistsError:
+                pass
     # category_names = [cat['name'] for cat in categories]
     # print('COCO categories: \n{}\n'.format(' '.join(category_names)))
-
 
 
 
@@ -108,12 +119,13 @@ for dataType in datatypes:
 
 
             # save the image
-            image_name = "{}_{}_{}".format(obj['category_id'], image_id, obj['id'])
-            image_path = "{}/{}.jpg".format(processed_images_path, image_name)
+            category_id = obj['category_id']
+            image_name = "{}_{}_{}".format(category_id, image_id, obj['id'])
+            image_path = "{}/{}/{}.jpg".format(processed_images_path, category_name_dict[category_id], image_name)
             scipy.misc.toimage(final_img, cmin=0.0, cmax=1.0).save(image_path)
 
             # save the mask
-            mask_path = "{}/{}.jpg".format(processed_masks_path, image_name)
+            mask_path = "{}/{}/{}.jpg".format(processed_masks_path, category_name_dict[category_id], image_name)
             scipy.misc.toimage(final_mask, cmin=0.0, cmax=1.0).save(mask_path)
 
         return
