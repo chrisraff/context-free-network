@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from tqdm import tqdm
 import skimage.io as io
@@ -40,6 +41,7 @@ for dataType in datatypes:
         image_paths = glob.glob('{}/{}/*'.format(processed_images_path, target_class_name))
         mask_paths = glob.glob('{}/{}/*'.format(processed_masks_path, target_class_name))
 
+
         print("loading images into RAM")
         images = []
         for filename in tqdm(image_paths):
@@ -68,7 +70,15 @@ for dataType in datatypes:
         filenames = [x.split('/')[-1] for x in image_paths]
         for image, mask, filename in zip(images, masks, filenames):
             output_image, folder_suffix = black_background(image, mask)
-            output_path = "{}/{}{}/{}".format(dataDir, dataType, folder_suffix, filename)
+
+            # make the target folders
+            output_dir = "{}/{}{}/{}".format(dataDir, dataType, folder_suffix, target_class_name)
+            try:
+                os.mkdir(output_dir)
+            except FileExistsError:
+                pass
+
+            output_path = "{}/{}".format(output_dir, filename)
             scipy.misc.toimage(output_image, cmin=0.0, cmax=255.0).save(output_path)
 
 
