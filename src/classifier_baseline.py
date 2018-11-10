@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
     USE_GPU = True
 
-    dtype = torch.float32 # we will be using float throughout this tutorial
+    dtype = torch.float32
 
     if USE_GPU and torch.cuda.is_available():
         device = torch.device('cuda')
@@ -79,17 +79,20 @@ if __name__ == '__main__':
     
     channel_1 = 64
     channel_2 = 32
-    hidden_1 = 1000
+    channel_3 = 32
+    hidden_1 = 2000
     hidden_2 = 400
 
 
     model = nn.Sequential(
-        nn.Conv2d(3, channel_1, kernel_size=5, stride=1, padding=2),
-        nn.MaxPool2d(4),
-        nn.Conv2d(channel_1, channel_2, kernel_size=5, stride=1, padding=2),
+        nn.Conv2d(3, channel_1, kernel_size=7, stride=1, padding=6),
+        nn.MaxPool2d(2),
+        nn.Conv2d(channel_1, channel_2, kernel_size=7, stride=1, padding=6),
+        nn.MaxPool2d(2),
+        nn.Conv2d(channel_2, channel_3, kernel_size=5, stride=1, padding=4),
         nn.MaxPool2d(2),
         Flatten(),
-        nn.Linear(2048, hidden_1),
+        nn.Linear(4608, hidden_1),
         nn.BatchNorm1d(hidden_1, eps=1e-05, momentum=0.1),
         nn.ReLU(),
         nn.Linear(hidden_1, hidden_2),
@@ -98,7 +101,7 @@ if __name__ == '__main__':
         nn.Linear(hidden_2, 2),
     )
 
-    epochs = 5
+    epochs = 2
 
 
     learning_rate = 5e-3
@@ -136,3 +139,6 @@ if __name__ == '__main__':
                 print()
 
 
+    # final val check
+    print('done training, getting final val acc')
+    check_accuracy(valset_loader, model)
