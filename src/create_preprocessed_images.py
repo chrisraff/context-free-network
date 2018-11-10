@@ -11,8 +11,8 @@ import scipy.misc
 from tqdm import tqdm
 import os
 
+from targets import target_class_names
 
-target_class_names = "broccoli horse".split()
 
 datatypes = "val2017 train2017".split()
 
@@ -102,6 +102,7 @@ for dataType in datatypes:
             # # show the image
             # plt.imshow(cropped_image)
             # plt.axis('off')
+            # plt.show()
 
             # get the mask
             rle = maskutils.frPyObjects(obj['segmentation'], *pixels.shape[:2])
