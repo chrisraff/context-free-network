@@ -67,7 +67,9 @@ for dataType in datatypes:
 
 
         print("altering images")
-        filenames = [x.split('/')[-1] for x in image_paths]
+        # windows paths are stupid
+        filenames = [x.replace('\\','/').split('/')[-1] for x in image_paths]
+        frst = True
         for image, mask, filename in zip(images, masks, filenames):
             output_image, folder_suffix = black_background(image, mask)
 
