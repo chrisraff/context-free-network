@@ -75,10 +75,12 @@ for dataType in datatypes:
 
             # make the target folders
             output_dir = "{}/{}{}/{}".format(dataDir, dataType, folder_suffix, target_class_name)
-            try:
-                os.mkdir(output_dir)
-            except FileExistsError:
-                pass
+            if frst:
+                try:
+                    os.mkdir(output_dir)
+                except FileExistsError:
+                    pass
+                frst = False
 
             output_path = "{}/{}".format(output_dir, filename)
             scipy.misc.toimage(output_image, cmin=0.0, cmax=255.0).save(output_path)
