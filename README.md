@@ -20,9 +20,8 @@ context-free-network/
 
 
 ## To Do
-1. Get the segmentation mask for each image
-2. Train a basic pytorch model on the data
-3. Make function to alter background of image
+make the "val2017" part come at the end of the folder name, so the folders group semantically
+
 
 
 ## Resources
