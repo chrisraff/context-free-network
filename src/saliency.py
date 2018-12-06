@@ -140,7 +140,7 @@ if __name__ == '__main__':
     print('using device:', device)
 
     # model
-    model = torch.load(model_fname, 'cuda')
+    model = torch.load(model_fname)
 
     print(model)
 
