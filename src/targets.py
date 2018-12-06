@@ -1,1 +1,1 @@
-target_class_names = "broccoli horse".split()
+target_class_names = "cat dog horse broccoli carrot car couch bed airplane boat".split()
