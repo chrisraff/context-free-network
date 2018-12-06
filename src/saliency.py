@@ -25,9 +25,9 @@ loader_mode = "valset"
 
 args = sys.argv[1:]
 if len(args) > 0:
-    mode = args[1]
+    mode = args[0]
 if len(args) > 1:
-    loader_mode = args[2]
+    loader_mode = args[1]
 
 
 data_dir = 'C:/Users/raffc/Downloads/coco2017'
