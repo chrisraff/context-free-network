@@ -11,6 +11,7 @@ import torch.nn.functional as F  # useful stateless functions
 import pickle
 import matplotlib.pyplot as plt
 import argparse
+from latest_model import latest_model
 
 
 
@@ -35,7 +36,7 @@ val_full_dir = 'val2017_processed_images'
 # model_fname = 'classifier_{}.nn'.format(args.mode)
 # model_fname = '../models/model_random_2018-12-06--14-03-22.nn'.format(args.mode)
 model_fname = '../models/model_random_2018-12-06--16-33-55.nn'.format(args.mode)
-
+model_fname = latest_model()
 
 
 
