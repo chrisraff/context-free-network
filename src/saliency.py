@@ -1,3 +1,4 @@
+from local_paths import *
 import sys
 import torch
 import torch.nn as nn
@@ -11,7 +12,6 @@ import torch.nn.functional as F  # useful stateless functions
 import pickle
 import matplotlib.pyplot as plt
 import argparse
-from latest_model import latest_model
 
 
 
@@ -22,14 +22,6 @@ parser.add_argument("-l", "--loader", default="valset", help="Data loader type (
 
 args = parser.parse_args()
 
-
-data_dir = '../res'
-# data_dir = 'C:/Users/raffc/Downloads/coco2017'
-
-train_dir = 'train2017_'+args.mode
-val_dir = 'val2017_'+args.mode
-
-val_full_dir = 'val2017_processed_images'
 
 # class_names = ['broccoli horse'.split()]
 
