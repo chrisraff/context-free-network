@@ -138,7 +138,7 @@ if __name__ == '__main__':
     print('using device:', device)
 
     # model
-    model = torch.load(model_fname, device)
+    model = torch.load('../models/'+model_fname, device)
     print(model)
 
     # limit the number of batches we view
