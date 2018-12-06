@@ -91,6 +91,7 @@ if __name__ == '__main__':
     hidden_2 = 400
 
 
+    # model = torch.load('classifier_random.nn')
     model = nn.Sequential(
         nn.Conv2d(3, channel_1, kernel_size=7, stride=1, padding=6),
         nn.MaxPool2d(2),
@@ -113,7 +114,7 @@ if __name__ == '__main__':
     epochs = 4
 
 
-    learning_rate = 5e-5
+    learning_rate = 5e-4
 
     # optimizer = optim.SGD(model.parameters(), lr=learning_rate,
     #                  momentum=0.9, nesterov=True)
