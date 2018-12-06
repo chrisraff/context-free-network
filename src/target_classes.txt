@@ -1,0 +1,10 @@
+cat
+dog
+horse
+broccoli
+carrot
+car
+couch
+bed
+airplane
+boat
