@@ -25,6 +25,22 @@ def black_background(image, mask):
     return output_image, "_black"
 
 
+def random_background(image, mask):
+    assert mask.max() == 1, mask.max()
+    assert image.max() > 1, image.max() # expecting up to 255
+
+    mask = mask[:,:,np.newaxis]
+
+    noise = np.random.random(image.shape) * 255
+
+    output_image = image * mask + (1 - mask) * noise
+
+    # plt.imshow(output_image)
+    # plt.axis('off')
+    # plt.show()
+    # exit()
+
+    return output_image, "_random"
 
 
 
@@ -71,7 +87,8 @@ for dataType in datatypes:
         filenames = [x.replace('\\','/').split('/')[-1] for x in image_paths]
         frst = True
         for image, mask, filename in zip(images, masks, filenames):
-            output_image, folder_suffix = black_background(image, mask)
+            # output_image, folder_suffix = black_background(image, mask)
+            output_image, folder_suffix = random_background(image, mask)
 
             # make the target folders
             output_dir = "{}/{}{}/{}".format(dataDir, dataType, folder_suffix, target_class_name)
