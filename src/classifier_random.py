@@ -108,7 +108,7 @@ if __name__ == '__main__':
         nn.Linear(hidden_2, len(trainset.classes)),
     )
 
-    model = model.cuda()
+    model = model.to(device=device)
 
     epochs = 4
 
