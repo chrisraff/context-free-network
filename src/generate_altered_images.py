@@ -8,6 +8,13 @@ import scipy.misc
 
 from targets import target_class_names
 
+'''
+change the backgrounds of the processed images
+
+run this when you what to make a new background modification
+'''
+
+
 
 datatypes = "val2017 train2017".split()
 

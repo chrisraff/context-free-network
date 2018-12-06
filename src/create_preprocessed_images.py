@@ -13,6 +13,12 @@ import os
 
 from targets import target_class_names
 
+'''
+compute the crops and masks for the images
+
+run this if you want to introduce new classes
+'''
+
 
 datatypes = "val2017 train2017".split()
 
