@@ -4,21 +4,16 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from torch.utils.data import sampler
-
 import torchvision.datasets as dset
 import torchvision.transforms as T
-
 import numpy as np
-
 import torch.nn.functional as F  # useful stateless functions
-
 import pickle
-
 import matplotlib.pyplot as plt
-
-
-
 import argparse
+
+
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-m", "--mode", default="random", help="Mode (random/black)")
@@ -27,16 +22,21 @@ parser.add_argument("-l", "--loader", default="valset", help="Data loader type (
 args = parser.parse_args()
 
 
-data_dir = 'C:/Users/raffc/Downloads/coco2017'
+data_dir = '../res'
+# data_dir = 'C:/Users/raffc/Downloads/coco2017'
 
 train_dir = 'train2017_'+args.mode
 val_dir = 'val2017_'+args.mode
 
 val_full_dir = 'val2017_processed_images'
 
-class_names = ['broccoli horse'.split()]
+# class_names = ['broccoli horse'.split()]
 
-model_fname = 'classifier_{}.nn'.format(args.mode)
+# model_fname = 'classifier_{}.nn'.format(args.mode)
+# model_fname = '../models/model_random_2018-12-06--14-03-22.nn'.format(args.mode)
+model_fname = '../models/model_random_2018-12-06--16-33-55.nn'.format(args.mode)
+
+
 
 
 # pytorch convenience stuff
@@ -72,6 +72,11 @@ def compute_saliency_maps(X, y, model):
     # X.to(device=device)
 
     scores = model(X)
+
+    # print("scores: ", scores.shape)
+    # print("y: ", y.shape)
+    # assert scores.shape == y.shape, "scores and true y values should be the same shape"
+
     loss = torch.nn.functional.cross_entropy(scores, y)
 
     loss.backward()
@@ -140,15 +145,13 @@ if __name__ == '__main__':
     print('using device:', device)
 
     # model
-    model = torch.load(model_fname, 'cuda')
+    model = torch.load(model_fname, device)
 
     print(model)
 
     # limit the number of batches we view
     upto = 5
     curr = 0
-
-    class_names = ['broccoli horse'.split()]
 
     for X, y in loader:
         if upto <= curr:
