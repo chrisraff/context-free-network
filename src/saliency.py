@@ -121,7 +121,7 @@ if __name__ == '__main__':
 
     # use the loader that is specified in the initial arguments
     loader = valset_loader
-    if args.loader_mode == "valfullset":
+    if args.loader == "valfullset":
         loader = valfullset_loader
 
 
