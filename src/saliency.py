@@ -17,29 +17,26 @@ import pickle
 import matplotlib.pyplot as plt
 
 
-mode = "random"
-# mode = "black"
 
-loader_mode = "valset"
-# loader_mode = "valfullset"
+import argparse
+parser = argparse.ArgumentParser()
 
-args = sys.argv[1:]
-if len(args) > 0:
-    mode = args[0]
-if len(args) > 1:
-    loader_mode = args[1]
+parser.add_argument("-m", "--mode", default="random", help="Mode (random/black)")
+parser.add_argument("-l", "--loader", default="valset", help="Data loader type (valset/valfullset)")
+
+args = parser.parse_args()
 
 
 data_dir = 'C:/Users/raffc/Downloads/coco2017'
 
-train_dir = 'train2017_'+mode
-val_dir = 'val2017_'+mode
+train_dir = 'train2017_'+args.mode
+val_dir = 'val2017_'+args.mode
 
 val_full_dir = 'val2017_processed_images'
 
 class_names = ['broccoli horse'.split()]
 
-model_fname = 'classifier_{}.nn'.format(mode)
+model_fname = 'classifier_{}.nn'.format(args.mode)
 
 
 # pytorch convenience stuff
@@ -124,7 +121,7 @@ if __name__ == '__main__':
 
     # use the loader that is specified in the initial arguments
     loader = valset_loader
-    if loader_mode == "valfullset":
+    if args.loader_mode == "valfullset":
         loader = valfullset_loader
 
 
