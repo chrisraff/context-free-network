@@ -106,6 +106,8 @@ if __name__ == '__main__':
         nn.Linear(hidden_2, 2),
     )
 
+    model = model.cuda()
+
     epochs = 2
 
 
@@ -115,7 +117,7 @@ if __name__ == '__main__':
                      momentum=0.9, nesterov=True)
 
     # train
-    model = model.to(device=device)  # move the model parameters to CPU/GPU
+    # model = model.to(device=device)  # move the model parameters to CPU/GPU
     for e in range(epochs):
         for t, (x, y) in enumerate(trainset_loader):
 
@@ -149,3 +151,6 @@ if __name__ == '__main__':
     print('done training, getting final val acc')
     check_accuracy(valset_loader, model)
     check_accuracy(valfullset_loader, model)
+
+
+    torch.save(model, 'classifier_black.nn')
