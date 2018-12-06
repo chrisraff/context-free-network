@@ -78,7 +78,7 @@ if __name__ == '__main__':
         device = torch.device('cpu')
 
     # Constant to control how frequently we print train loss
-    print_every = 100
+    print_every = 1000
 
     print('using device:', device)
 
@@ -164,12 +164,14 @@ if __name__ == '__main__':
             #     plt.show()
             print()
 
+        # update graph
         ax.set_xlim(0, len(losses))
+        ax.set_ylim(0, max(losses))
         ln.set_data(np.arange(len(losses)), losses)
         return ln,
 
     ani = FuncAnimation(fig, update, frames=enumerate(trainset_loader),
-                        init_func=init, blit=True)
+                        init_func=init, blit=True, interval=1e-10)
     plt.show()
 
     ## train
