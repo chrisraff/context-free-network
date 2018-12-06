@@ -146,7 +146,6 @@ if __name__ == '__main__':
 
     # model
     model = torch.load(model_fname, device)
-
     print(model)
 
     # limit the number of batches we view
