@@ -105,7 +105,7 @@ if __name__ == '__main__':
         nn.Linear(hidden_1, hidden_2),
         nn.BatchNorm1d(hidden_2, eps=1e-05, momentum=0.1),
         nn.ReLU(),
-        nn.Linear(hidden_2, 2),
+        nn.Linear(hidden_2, len(trainset.classes)),
     )
 
     model = model.cuda()
