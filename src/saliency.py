@@ -23,6 +23,11 @@ parser.add_argument("-l", "--loader", default="valset", help="Data loader type (
 args = parser.parse_args()
 
 
+val_dir = 'val2017_'+args.mode
+
+val_full_dir = 'val2017_processed_images'
+
+
 # class_names = ['broccoli horse'.split()]
 
 # model_fname = 'classifier_{}.nn'.format(args.mode)
@@ -100,7 +105,6 @@ if __name__ == '__main__':
         T.ToTensor()
     ])
 
-    trainset = dset.ImageFolder('{}/{}'.format(data_dir, train_dir), tensify)
     valset = dset.ImageFolder('{}/{}'.format(data_dir, val_dir), tensify)
     valfullset = dset.ImageFolder('{}/{}'.format(data_dir, val_full_dir), tensify)
 
