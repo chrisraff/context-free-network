@@ -152,8 +152,11 @@ if __name__ == '__main__':
             plt.imshow(X[i].permute(1, 2, 0).numpy())
             plt.axis('off')
             _, idx = scores[i].max(0)
-            acc, pred = loader.dataset.classes[y[i]], loader.dataset.classes[idx]
-            plt.title('was {}, predicted {}'.format(acc, pred))
+            if y[i].to(device=device) == idx.data:
+                plt.title(loader.dataset.classes[y[i]])
+            else:
+                acc, pred = loader.dataset.classes[y[i]], loader.dataset.classes[idx]
+                plt.title('was {}, predicted {}'.format(acc, pred))
             plt.subplot(2, N, N + i + 1)
             plt.imshow(saliency[i], cmap=plt.cm.hot)
             plt.axis('off')
