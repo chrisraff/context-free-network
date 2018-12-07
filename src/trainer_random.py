@@ -13,8 +13,8 @@ import torch.nn.functional as F  # useful stateless functions
 
 import matplotlib.pyplot as plt
 
+from local_paths import *
 
-data_dir = 'C:/Users/raffc/Downloads/coco2017'
 
 train_dir = 'train2017_random'
 val_dir = 'val2017_random'
