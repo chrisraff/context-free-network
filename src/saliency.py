@@ -28,8 +28,6 @@ val_dir = 'val2017_'+args.mode
 val_full_dir = 'val2017_processed_images'
 
 
-# class_names = ['broccoli horse'.split()]
-
 # model_fname = 'classifier_{}.nn'.format(args.mode)
 # model_fname = '../models/model_random_2018-12-06--14-03-22.nn'.format(args.mode)
 # model_fname = '../models/model_random_2018-12-06--16-33-55.nn'.format(args.mode)
@@ -108,10 +106,6 @@ if __name__ == '__main__':
     valset = dset.ImageFolder('{}/{}'.format(data_dir, val_dir), tensify)
     valfullset = dset.ImageFolder('{}/{}'.format(data_dir, val_full_dir), tensify)
 
-    # trainset_loader = torch.utils.data.DataLoader(
-    #     trainset,
-    #     batch_size=64, shuffle=True,
-    #     num_workers=4)
     valset_loader = torch.utils.data.DataLoader(
         valset,
         batch_size=5, shuffle=True,
@@ -173,9 +167,9 @@ if __name__ == '__main__':
             plt.subplot(2, N, i + 1)
             plt.imshow(X[i].permute(1, 2, 0).numpy())
             plt.axis('off')
-            # plt.title(class_names[y[i]])
             _, idx = scores[i].max(0)
-            plt.title('was {}, predicted {}'.format(y[i], idx.data))
+            acc, pred = loader.dataset.classes[y[i]], loader.dataset.classes[idx]
+            plt.title('was {}, predicted {}'.format(acc, pred))
             plt.subplot(2, N, N + i + 1)
             plt.imshow(saliency[i], cmap=plt.cm.hot)
             plt.axis('off')
