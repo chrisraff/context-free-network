@@ -47,8 +47,26 @@ def check_accuracy(dataset, model):
         acc = float(num_correct) / num_samples
         print('Got %d / %d correct (%.2f)' % (num_correct, num_samples, 100 * acc))
 
+def uniform_sampler(dataset):
+    nclasses = len(dataset.imgs)
+
+    imgs_per_class = [0] * len(dataset.classes)
+    for _, cl in dataset.imgs:
+        imgs_per_class[cl] += 1
+
+    weight_per_img = [0] * nclasses
+    for idx, (_, cl) in enumerate(dataset.imgs):
+        weight_per_img[idx] = nclasses / imgs_per_class[cl]
+
+    return sampler.WeightedRandomSampler(
+        torch.DoubleTensor(weight_per_img),
+        nclasses
+    )
 
 if __name__ == '__main__':
+    num_classes = None
+    batch_size = 64
+
     tensify = T.Compose([
         T.ToTensor()
     ])
@@ -56,15 +74,21 @@ if __name__ == '__main__':
     trainset = dset.ImageFolder('{}/{}'.format(data_dir, train_dir), tensify)
     valset = dset.ImageFolder('{}/{}'.format(data_dir, val_dir), tensify)
     valfullset = dset.ImageFolder('{}/{}'.format(data_dir, val_full_dir), tensify)
+    
+    # samples_weight = torch.from_numpy(np.ones(num_classes)/num_classes)
+    # samples_weigth = samples_weight.double()
+    sampler_t  = uniform_sampler(trainset)
+    sampler_v  = uniform_sampler(valset)
+    sampler_vf = uniform_sampler(valfullset)
 
     trainset_loader = torch.utils.data.DataLoader(trainset,
-         batch_size=64, shuffle=True,
+         batch_size=batch_size, sampler=sampler_t,
          num_workers=4)
     valset_loader = torch.utils.data.DataLoader(valset,
-         batch_size=64, shuffle=True,
+         batch_size=batch_size, sampler=sampler_v,
          num_workers=4)
     valfullset_loader = torch.utils.data.DataLoader(valfullset,
-         batch_size=64, shuffle=True,
+         batch_size=batch_size, sampler=sampler_vf,
          num_workers=4)
 
 
