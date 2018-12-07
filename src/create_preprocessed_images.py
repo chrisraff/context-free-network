@@ -102,6 +102,10 @@ for dataType in datatypes:
             # get the bounding box
             y,x,h,w = [int(num) for num in obj['bbox']]
 
+            # don't take super small images
+            if h < 10 or w < 10:
+                continue
+
             # crop the image
             cropped_image = pixels[x:x+w, y:y+h]
 
