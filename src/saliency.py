@@ -1,3 +1,4 @@
+from pytorch_helper_functions import *
 from local_paths import *
 import sys
 import torch
@@ -33,18 +34,6 @@ val_full_dir = 'val2017_processed_images'
 # model_fname = '../models/model_random_2018-12-06--16-33-55.nn'.format(args.mode)
 model_fname = latest_model()
 
-
-
-# pytorch convenience stuff
-def flatten(x):
-    N = x.shape[0]  # read in N, C, H, W
-    return x.view(N, -1)  # "flatten" the C * H * W values into a single vector per image
-
-
-# Wrap `flatten` function in a module in order to stack it in nn.Sequential
-class Flatten(nn.Module):
-    def forward(self, x):
-        return flatten(x)
 
 
 def compute_saliency_maps(X, y, model):
@@ -87,7 +76,7 @@ def check_accuracy(dataset, model):
     num_samples = 0
     model.eval()  # set model to evaluation mode
     with torch.no_grad():
-        for x, y in dataset:
+        for x, y, paths in dataset:
             x = x.to(device=device, dtype=dtype)  # move to device, e.g. GPU
             y = y.to(device=device, dtype=torch.long)
             scores = model(x)
@@ -99,12 +88,9 @@ def check_accuracy(dataset, model):
 
 
 if __name__ == '__main__':
-    tensify = T.Compose([
-        T.ToTensor()
-    ])
 
-    valset = dset.ImageFolder('{}/{}'.format(data_dir, val_dir), tensify)
-    valfullset = dset.ImageFolder('{}/{}'.format(data_dir, val_full_dir), tensify)
+    valset = ImageFolderWithPaths('{}/{}'.format(data_dir, val_dir))
+    valfullset = ImageFolderWithPaths('{}/{}'.format(data_dir, val_full_dir))
 
     valset_loader = torch.utils.data.DataLoader(
         valset,
@@ -122,9 +108,7 @@ if __name__ == '__main__':
 
 
     USE_GPU = True
-
     dtype = torch.float32
-
     if USE_GPU and torch.cuda.is_available():
         device = torch.device('cuda')
     else:
@@ -143,7 +127,7 @@ if __name__ == '__main__':
     upto = 5
     curr = 0
 
-    for X, y in loader:
+    for X, y, paths in loader:
         if upto <= curr:
             break
         curr += 1
