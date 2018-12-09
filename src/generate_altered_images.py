@@ -8,6 +8,8 @@ import scipy.misc
 
 from targets import target_class_names
 
+from local_paths import *
+
 '''
 change the backgrounds of the processed images
 
@@ -52,64 +54,59 @@ def random_background(image, mask):
 
 
 
-for dataType in datatypes:
-    dataDir = '../res'
-    # annFile = '{}/annotations/instances_{}.json'.format(dataDir, dataType)
-    processed_images_path = "{}/{}_processed_images".format(dataDir, dataType)
-    processed_masks_path = "{}/{}_processed_masks".format(dataDir, dataType)
+def alter_file(args):
+    filename, dataType, target_class_name = args
 
-    for target_class_name in target_class_names:
-        print("processing the '{}' class".format(target_class_name))
+    # cropped image
+    cropped_image = io.imread(filename)
+    if len(cropped_image.shape) < 3:
+        cropped_image = np.repeat(cropped_image[:,:,np.newaxis], 3, axis=2)
 
-        image_paths = glob.glob('{}/{}/*'.format(processed_images_path, target_class_name))
-        mask_paths = glob.glob('{}/{}/*'.format(processed_masks_path, target_class_name))
+    # cropped mask
+    cropped_mask = io.imread(filename.replace('processed_images', 'processed_masks'))
+    cropped_mask = (cropped_mask > 128).astype(int)
 
+    # save the image
+    output_filename = filename.replace('\\','/').split('/')[-1]
+    
+    output_image, folder_suffix = black_background(cropped_image, cropped_mask)
+    # output_image, folder_suffix = random_background(cropped_image, cropped_mask)
+    # output_image, folder_suffix = only_background(cropped_image, cropped_mask)
 
-        print("loading images into RAM")
-        images = []
-        for filename in tqdm(image_paths):
-            cropped_image = io.imread(filename)
-            if len(cropped_image.shape) < 3:
-                cropped_image = np.repeat(cropped_image[:,:,np.newaxis], 3, axis=2)
-            images += [cropped_image]
+    # make the target folders
+    output_dir = "{}/{}{}/{}".format(data_dir, dataType, folder_suffix, target_class_name)
+    os.makedirs(output_dir, exist_ok=True)
 
-        print("loading masks into RAM")
-        masks = []
-        for filename in tqdm(mask_paths):
-            cropped_mask = io.imread(filename)
-            cropped_mask = (cropped_mask > 128).astype(int)
-            masks += [cropped_mask]
+    # print(output_image.shape)
 
-        # plt.imshow(images[0])
-        # plt.axis('off')
-        # plt.show()
+    output_path = "{}/{}".format(output_dir, output_filename)
+    scipy.misc.toimage(output_image, cmin=0.0, cmax=255.0).save(output_path)
 
-        # plt.imshow(masks[0])
-        # plt.axis('off')
-        # plt.show()
+if __name__ == '__main__':
+    from multiprocessing import Pool
+    pool = Pool(4)
 
+    for dataType in datatypes:
+        print(dataType)
+        # dataDir = 'C:/Users/raffc/Downloads/coco2017'
+        # annFile = '{}/annotations/instances_{}.json'.format(dataDir, dataType)
+        processed_images_path = "{}/{}_processed_images".format(data_dir, dataType)
 
-        print("altering images")
-        # windows paths are stupid
-        filenames = [x.replace('\\','/').split('/')[-1] for x in image_paths]
-        frst = True
-        for image, mask, filename in zip(images, masks, filenames):
-            # output_image, folder_suffix = black_background(image, mask)
-            output_image, folder_suffix = random_background(image, mask)
+        for target_class_name in target_class_names:
+            print("processing the '{}' class".format(target_class_name))
 
-            # make the target folders
-            output_dir = "{}/{}{}/{}".format(dataDir, dataType, folder_suffix, target_class_name)
-            os.makedirs(output_dir, exist_ok=True)
+            image_paths = glob.glob('{}/{}/*'.format(processed_images_path, target_class_name))
+            # mask_paths = glob.glob('{}/{}/*'.format(processed_masks_path, target_class_name))
+            
+            args = [(filename, dataType, target_class_name) for filename in image_paths]
+            # image and mask filenames must be the same
+            _ = list(tqdm(pool.imap(alter_file, args), total=len(image_paths)))
 
-            output_path = "{}/{}".format(output_dir, filename)
-            scipy.misc.toimage(output_image, cmin=0.0, cmax=255.0).save(output_path)
+    '''
+    load all the cropped images into RAM
+    load all the cropped masks into RAM
 
-
-'''
-load all the cropped images into RAM
-load all the cropped masks into RAM
-
-for each pair
-    call the black_background function
-    write to folder
-'''
+    for each pair
+        call the black_background function
+        write to folder
+    '''
