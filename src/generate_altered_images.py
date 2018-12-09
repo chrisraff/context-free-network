@@ -57,21 +57,8 @@ def get_random_background_image(img_h, img_w, img_c):
     x = np.random.randint(max_w)
 
     bg = template_pixels[y:y+img_h, x:x+img_w, :]
+    # final_mask = imresize(cropped_mask, (64,64), order=0, preserve_range=True)
     return bg
-
-    # print(bounds)
-    # exit()
-
-    # print(template_pixels.shape)
-
-    # # 1/2 < h/w < 2
-
-    # print(image_shape)
-    # exit()
-    # # template_images
-
-
-    pass
 
 
 def black_background(image, mask):
