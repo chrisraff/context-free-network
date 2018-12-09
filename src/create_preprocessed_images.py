@@ -41,10 +41,7 @@ for dataType in datatypes:
 
         # make folders for classes
         for output_dir in [processed_images_path, processed_masks_path]:
-            try:
-                os.mkdir('{}/{}'.format(output_dir, category['name']))
-            except FileExistsError:
-                pass
+            os.makedirs('{}/{}'.format(output_dir, category['name']), exist_ok=True)
     # category_names = [cat['name'] for cat in categories]
     # print('COCO categories: \n{}\n'.format(' '.join(category_names)))
 
