@@ -1,3 +1,5 @@
+from os import listdir
+from os.path import isfile, join
 import os
 import numpy as np
 from tqdm import tqdm
@@ -22,6 +24,56 @@ datatypes = "val2017 train2017".split()
 
 
 
+
+template_images = []
+
+
+# load the template images into the variable `template_images`
+def load_templates():
+    global template_images
+    image_fnames = [f for f in listdir(templates_dir) if isfile(join(templates_dir, f))]
+    # print(image_fnames)
+    for image_fname in image_fnames:
+        image_path = templates_dir+'/'+image_fname
+        pixels = io.imread(image_path)
+        # print(pixels.shape)
+        template_images += [pixels]
+
+
+load_templates()
+
+
+
+# sample a crop of a random template such that the
+# shape of the crop is of the shape `image_shape`
+def get_random_background_image(img_h, img_w, img_c):
+
+    template_pixels = np.random.choice(template_images)
+
+    max_h = template_pixels.shape[0] - img_h
+    max_w = template_pixels.shape[1] - img_w
+
+    y = np.random.randint(max_h)
+    x = np.random.randint(max_w)
+
+    bg = template_pixels[y:y+img_h, x:x+img_w, :]
+    return bg
+
+    # print(bounds)
+    # exit()
+
+    # print(template_pixels.shape)
+
+    # # 1/2 < h/w < 2
+
+    # print(image_shape)
+    # exit()
+    # # template_images
+
+
+    pass
+
+
 def black_background(image, mask):
     output_image = image * mask[:,:,np.newaxis]
 
@@ -36,7 +88,7 @@ def black_background(image, mask):
 
 def random_background(image, mask):
     assert mask.max() == 1, mask.max()
-    assert image.max() > 1, image.max() # expecting up to 255
+    assert image.max() > 1, image.max()  # expecting up to 255
 
     mask = mask[:,:,np.newaxis]
 
@@ -51,6 +103,24 @@ def random_background(image, mask):
 
     return output_image, "_random"
 
+
+
+def template_background(image, mask):
+    assert mask.max() == 1, mask.max()
+    assert image.max() > 1, image.max()  # expecting up to 255
+
+    mask = mask[:,:,np.newaxis]
+
+    bg = get_random_background_image(*image.shape)
+
+    output_image = image*mask + (1 - mask)*bg
+
+    # plt.imshow(output_image)
+    # plt.axis('off')
+    # plt.show()
+    # exit()
+
+    return output_image, "_template"
 
 
 
@@ -68,10 +138,13 @@ def alter_file(args):
 
     # save the image
     output_filename = filename.replace('\\','/').split('/')[-1]
-    
-    output_image, folder_suffix = black_background(cropped_image, cropped_mask)
+
+
+    # output_image, folder_suffix = black_background(cropped_image, cropped_mask)
     # output_image, folder_suffix = random_background(cropped_image, cropped_mask)
     # output_image, folder_suffix = only_background(cropped_image, cropped_mask)
+    output_image, folder_suffix = template_background(cropped_image, cropped_mask)
+
 
     # make the target folders
     output_dir = "{}/{}{}/{}".format(data_dir, dataType, folder_suffix, target_class_name)
@@ -81,6 +154,7 @@ def alter_file(args):
 
     output_path = "{}/{}".format(output_dir, output_filename)
     scipy.misc.toimage(output_image, cmin=0.0, cmax=255.0).save(output_path)
+
 
 if __name__ == '__main__':
     from multiprocessing import Pool
@@ -97,10 +171,11 @@ if __name__ == '__main__':
 
             image_paths = glob.glob('{}/{}/*'.format(processed_images_path, target_class_name))
             # mask_paths = glob.glob('{}/{}/*'.format(processed_masks_path, target_class_name))
-            
+
             args = [(filename, dataType, target_class_name) for filename in image_paths]
             # image and mask filenames must be the same
-            _ = list(tqdm(pool.imap(alter_file, args), total=len(image_paths)))
+            # _ = list(tqdm(pool.imap(alter_file, args), total=len(image_paths)))
+            _ = list(tqdm(map(alter_file, args), total=len(image_paths)))
 
     '''
     load all the cropped images into RAM
