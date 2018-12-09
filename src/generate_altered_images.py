@@ -101,6 +101,10 @@ def random_background(image, mask):
     return output_image, "_random"
 
 
+def only_background(image, mask):
+    output_image = image * (1 - mask[:,:,np.newaxis])
+
+    return output_image, "_only_background"
 
 def template_background(image, mask):
     assert mask.max() == 1, mask.max()
@@ -118,7 +122,6 @@ def template_background(image, mask):
     exit()
 
     return output_image, "_template"
-
 
 
 def alter_file(args):
