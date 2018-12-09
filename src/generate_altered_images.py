@@ -52,7 +52,10 @@ def random_background(image, mask):
     return output_image, "_random"
 
 
+def only_background(image, mask):
+    output_image = image * (1 - mask[:,:,np.newaxis])
 
+    return output_image, "_only_background"
 
 def alter_file(args):
     filename, dataType, target_class_name = args
