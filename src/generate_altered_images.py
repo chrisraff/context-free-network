@@ -116,10 +116,10 @@ def template_background(image, mask):
 
     output_image = image*mask + (1 - mask)*bg
 
-    plt.imshow(output_image)
-    plt.axis('off')
-    plt.show()
-    exit()
+    # plt.imshow(output_image)
+    # plt.axis('off')
+    # plt.show()
+    # exit()
 
     return output_image, "_template"
 
@@ -174,8 +174,8 @@ if __name__ == '__main__':
 
             args = [(filename, dataType, target_class_name) for filename in image_paths]
             # image and mask filenames must be the same
-            # _ = list(tqdm(pool.imap(alter_file, args), total=len(image_paths)))
-            _ = list(tqdm(map(alter_file, args), total=len(image_paths)))
+            _ = list(tqdm(pool.imap(alter_file, args), total=len(image_paths)))
+            # _ = list(tqdm(map(alter_file, args), total=len(image_paths)))
 
     '''
     load all the cropped images into RAM
