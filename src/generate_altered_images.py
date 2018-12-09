@@ -1,3 +1,4 @@
+from skimage.transform import resize as imresize
 from os import listdir
 from os.path import isfile, join
 import os
@@ -43,21 +44,30 @@ def load_templates():
 load_templates()
 
 
-
 # sample a crop of a random template such that the
 # shape of the crop is of the shape `image_shape`
 def get_random_background_image(img_h, img_w, img_c):
 
     template_pixels = np.random.choice(template_images)
 
-    max_h = template_pixels.shape[0] - img_h
-    max_w = template_pixels.shape[1] - img_w
+    while True:
+        h = int((np.random.random()*0.9 + 0.1) * template_pixels.shape[0])
+        w = int((np.random.random()*0.9 + 0.1) * template_pixels.shape[1])
 
-    y = np.random.randint(max_h)
-    x = np.random.randint(max_w)
+        # max_h = template_pixels.shape[0] - h
+        # max_w = template_pixels.shape[1] - w
 
-    bg = template_pixels[y:y+img_h, x:x+img_w, :]
-    # final_mask = imresize(cropped_mask, (64,64), order=0, preserve_range=True)
+        y = np.random.randint(h)
+        x = np.random.randint(w)
+
+        if max(w, h) < 2 * min(w, h):
+            break
+        else:
+            print(w, h, max(w, h), 2 * min(w, h))
+
+    bg = template_pixels[y:y+h, x:x+w, :]
+    bg = imresize(bg, (img_h, img_w), mode='reflect', preserve_range=True)
+    bg = bg.astype(int)
     return bg
 
 
@@ -102,10 +112,10 @@ def template_background(image, mask):
 
     output_image = image*mask + (1 - mask)*bg
 
-    # plt.imshow(output_image)
-    # plt.axis('off')
-    # plt.show()
-    # exit()
+    plt.imshow(output_image)
+    plt.axis('off')
+    plt.show()
+    exit()
 
     return output_image, "_template"
 
