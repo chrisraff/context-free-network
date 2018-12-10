@@ -271,3 +271,4 @@ if __name__ == '__main__':
     torch.save(model, fname)
 
     plt.plot(losses)
+    plt.show()
