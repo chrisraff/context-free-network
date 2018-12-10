@@ -6,6 +6,7 @@ from torch.utils.data import sampler
 
 import torchvision.datasets as dset
 import torchvision.transforms as T
+import torchvision.models as models
 
 import numpy as np
 
@@ -140,22 +141,30 @@ if __name__ == '__main__':
     if args.continuous:
         model = torch.load('../models/'+latest_model(args.mode))
     else:
-        model = nn.Sequential(
-            nn.Conv2d(3, channel_1, kernel_size=7, stride=1, padding=6),
-            nn.MaxPool2d(2),
-            nn.Conv2d(channel_1, channel_2, kernel_size=7, stride=1, padding=6),
-            nn.MaxPool2d(2),
-            nn.Conv2d(channel_2, channel_3, kernel_size=5, stride=1, padding=4),
-            nn.MaxPool2d(2),
-            Flatten(),
-            nn.Linear(4608, hidden_1),
-            nn.BatchNorm1d(hidden_1, eps=1e-05, momentum=0.1),
-            nn.ReLU(),
-            nn.Linear(hidden_1, hidden_2),
-            nn.BatchNorm1d(hidden_2, eps=1e-05, momentum=0.1),
-            nn.ReLU(),
-            nn.Linear(hidden_2, len(trainset.classes)),
-        )
+        # model = nn.Sequential(
+        #     nn.Conv2d(3, channel_1, kernel_size=7, stride=1, padding=6),
+        #     nn.MaxPool2d(2),
+        #     nn.Conv2d(channel_1, channel_2, kernel_size=7, stride=1, padding=6),
+        #     nn.MaxPool2d(2),
+        #     nn.Conv2d(channel_2, channel_3, kernel_size=5, stride=1, padding=4),
+        #     nn.MaxPool2d(2),
+        #     Flatten(),
+        #     nn.Linear(4608, hidden_1),
+        #     nn.BatchNorm1d(hidden_1, eps=1e-05, momentum=0.1),
+        #     nn.ReLU(),
+        #     nn.Linear(hidden_1, hidden_2),
+        #     nn.BatchNorm1d(hidden_2, eps=1e-05, momentum=0.1),
+        #     nn.ReLU(),
+        #     nn.Linear(hidden_2, len(trainset.classes)),
+        # )
+        model = models.resnet18(pretrained=True)
+
+        for param in model.parameters():
+            param.requires_grad = False
+
+        # model.fc.requires_grad = True
+        num_ftrs = model.fc.in_features
+        model.fc = nn.Linear(num_ftrs, len(trainset.classes))
 
     model = model.to(device=device)
 
@@ -166,7 +175,9 @@ if __name__ == '__main__':
 
     # optimizer = optim.SGD(model.parameters(), lr=learning_rate,
     #                  momentum=0.9, nesterov=True)
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    # optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    # print(dir(model.fc))
+    optimizer = optim.Adam(model.fc.parameters(), lr=learning_rate)
 
     losses = []
 
