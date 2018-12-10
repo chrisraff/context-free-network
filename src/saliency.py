@@ -18,13 +18,15 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-m", "--mode", default="random", help="Mode (random/black)")
+parser.add_argument("-m", "--mode", default="random", help="Mode (random/black/normal)")
 parser.add_argument("-l", "--loader", default="valset", help="Data loader type (valset/valfullset)")
 
 args = parser.parse_args()
 
 
 val_dir = 'val2017_'+args.mode
+if args.mode == 'normal':
+    val_dir = 'val2017_processed_images'
 
 val_full_dir = 'val2017_processed_images'
 
