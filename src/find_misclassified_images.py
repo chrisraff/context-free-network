@@ -9,8 +9,9 @@ from tqdm import tqdm
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-m", "--mode", default="random", help="Mode (random/black)")
 parser.add_argument("-l", "--loader", default="valset", help="Data loader type (valset/valfullset)")
+parser.add_argument("-m", "--mode", default="only_background", help="Mode (random/black)")
+parser.add_argument("-n", "--threshold", default=0.9, type=float, help="minimum percentage confidence on incorrect class to be considered \"novel\"")
 args = parser.parse_args()
 
 
@@ -42,17 +43,11 @@ def check_accuracy(dataset, model):
             scores = F.softmax(scores, dim=1)
 
 
-
-            # minimum percentage confidence on incorrect class to be considered "novel"
-            threshold = 0.9
-
-
-
             values, preds = scores.max(1)
 
             incorrect_preds = (preds != y)
 
-            confident_preds = (values > threshold)
+            confident_preds = (values > args.threshold)
 
             novel_mask = (incorrect_preds & confident_preds)
             novel_ids = np.where(novel_mask == 1)
