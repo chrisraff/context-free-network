@@ -124,7 +124,8 @@ if __name__ == '__main__':
 
     # model
     model = torch.load('../models/'+model_fname, device)
-    print(model)
+    # print(model)
+    print('loaded model ' + model_fname)
 
     # limit the number of batches we view
     upto = args.number
