@@ -100,7 +100,7 @@ for dataType in datatypes:
             y,x,h,w = [int(num) for num in obj['bbox']]
 
             # don't take super small images
-            if h < 10 or w < 10:
+            if h < 32 or w < 32:
                 continue
 
             # crop the image
