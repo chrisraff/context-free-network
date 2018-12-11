@@ -20,6 +20,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("-m", "--mode", default="random", help="Mode (random/black/normal)")
 parser.add_argument("-l", "--loader", default="valset", help="Data loader type (valset/valfullset)")
+parser.add_argument("-n", "--number", default="5", type=int, help="Number of sets to show")
 
 args = parser.parse_args()
 
@@ -126,7 +127,7 @@ if __name__ == '__main__':
     print(model)
 
     # limit the number of batches we view
-    upto = 5
+    upto = args.number
     curr = 0
 
     for X, y, paths in loader:
