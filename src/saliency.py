@@ -145,7 +145,7 @@ if __name__ == '__main__':
 
         # Compute saliency maps for images in X
         saliency, scores = compute_saliency_maps(X_tensor, y_tensor, model)
-        print(scores)
+        print(F.softmax(scores, 1))
 
         # Convert the saliency map from Torch Tensor to numpy array and show images
         # and saliency maps together.
