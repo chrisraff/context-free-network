@@ -9,8 +9,8 @@ from tqdm import tqdm
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-l", "--loader", default="valset", help="Data loader type (valset/valfullset)")
 parser.add_argument("-m", "--mode", default="only_background", help="Mode (random/black)")
+parser.add_argument("-l", "--loader", default="valfullset", help="Data loader type (valset/valfullset)")
 parser.add_argument("-n", "--threshold", default=0.9, type=float, help="minimum percentage confidence on incorrect class to be considered \"novel\"")
 args = parser.parse_args()
 
