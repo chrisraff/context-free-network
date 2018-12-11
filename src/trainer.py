@@ -269,17 +269,17 @@ if __name__ == '__main__':
         if args.mode != 'normal':
             check_accuracy(valfullset_loader, model)
         print()
+        
+        import time
+        timestr = time.strftime("%Y-%m-%d--%H-%M-%S")
+        fname = "../models/model_{}_{}.nn".format(args.mode, timestr)
+        torch.save(model, fname)
 
 
     # final val check
     print('done training, getting final val acc')
     check_accuracy(valset_loader, model)
     check_accuracy(valfullset_loader, model)
-
-    import time
-    timestr = time.strftime("%Y-%m-%d--%H-%M-%S")
-    fname = "../models/model_{}_{}.nn".format(args.mode, timestr)
-    torch.save(model, fname)
 
     plt.plot(losses)
     plt.show()
