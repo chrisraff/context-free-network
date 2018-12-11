@@ -117,8 +117,9 @@ for dataType in datatypes:
             cropped_mask = mask[x:x+w, y:y+h,0]
 
             # normalize the width and height of the image and the mask
-            final_img = imresize(cropped_image, (64,64))
-            final_mask = imresize(cropped_mask, (64,64), order=0, preserve_range=True)
+            output_size = 224
+            final_img = imresize(cropped_image, (output_size,output_size))
+            final_mask = imresize(cropped_mask, (output_size,output_size), order=0, preserve_range=True)
 
             # # the image with the background zeroed out using the mask (useful for later)
             # alignment_test_img = final_img * final_mask[:,:,np.newaxis]
