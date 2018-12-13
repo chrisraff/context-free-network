@@ -105,25 +105,64 @@ for dataType in datatypes:
             if h < 32 or w < 32:
                 continue
 
+            # # show the image
+            # plt.imshow(pixels)
+            # plt.axis('off')
+            # plt.show()
 
-            # crop the image
+
+            # crop the image to the bounding box
             cropped_image = pixels[x:x+w, y:y+h]
 
+
+            # crop the image to the area around the bounding box
+            border_proportion = 1/3  # percentage of the bbox width to pad the crop with
+
+            start_x = int(max(0, x - w*border_proportion))
+            end_x = int(min(pixels.shape[0], start_x + w + 2*w*border_proportion))
+            start_y = int(max(0, y - h*border_proportion))
+            end_y = int(min(pixels.shape[1], start_y + h + 2*h*border_proportion))
+            cropped_image = pixels[start_x:end_x, start_y:end_y]
+
+
             # # show the image
+            # plt.subplot(2, 1, 2)
             # plt.imshow(cropped_image)
             # plt.axis('off')
             # plt.show()
+
+
+
+            # ignore images with 1 class that fills up the whole image
+            total_image_object_coverage = (w*h) / (pixels.shape[0]*pixels.shape[1])
+            if 0.9 > total_image_object_coverage:
+                continue
+
+            # ignore images that take up too little or too much of the cropped image
+            cropped_image_object_coverage = (w*h) / (cropped_image.shape[0]*cropped_image.shape[1])
+            if not (0.1 < cropped_image_object_coverage < 0.9):
+                continue
+
+            # created the cropped mask
+            cropped_mask = np.zeros_like(cropped_image)
+            start_x = int(w*border_proportion)
+            end_x = int(start_x + w)
+            start_y = int(h*border_proportion)
+            end_y = int(start_y + h)
+            cropped_mask[start_x:end_x, start_y:end_y] = 1
 
             # get the mask
             rle = maskutils.frPyObjects(obj['segmentation'], *pixels.shape[:2])
             mask = maskutils.decode(rle)
             cropped_mask = mask[x:x+w, y:y+h,0]
 
-            object_coverage = np.sum(mask) / np.prod(cropped_mask.shape)
 
-            # ignore images that take up too little or too much of the cropped image
-            if not 0.1 < object_coverage < 0.95:
-                continue
+            # object_coverage = np.sum(mask) / np.prod(cropped_mask.shape)
+
+            # # ignore images that take up too little or too much of the cropped image
+            # if not 0.1 < object_coverage < 0.9:
+            #     continue
+
 
             # normalize the width and height of the image and the mask
             output_size = 224
