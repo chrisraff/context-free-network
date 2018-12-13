@@ -5,6 +5,7 @@ train2017/
 test2017/
 val2017/
 models/
+*.png
 
 
 # Byte-compiled / optimized / DLL files
