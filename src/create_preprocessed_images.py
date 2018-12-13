@@ -105,6 +105,7 @@ for dataType in datatypes:
             if h < 32 or w < 32:
                 continue
 
+
             # crop the image
             cropped_image = pixels[x:x+w, y:y+h]
 
@@ -117,6 +118,12 @@ for dataType in datatypes:
             rle = maskutils.frPyObjects(obj['segmentation'], *pixels.shape[:2])
             mask = maskutils.decode(rle)
             cropped_mask = mask[x:x+w, y:y+h,0]
+
+            object_coverage = np.sum(mask) / np.prod(cropped_mask.shape)
+
+            # ignore images that take up too little or too much of the cropped image
+            if not 0.1 < object_coverage < 0.95:
+                continue
 
             # normalize the width and height of the image and the mask
             output_size = 224
