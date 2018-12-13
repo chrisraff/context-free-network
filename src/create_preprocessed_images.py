@@ -13,6 +13,8 @@ import os
 
 from targets import target_class_names
 
+from local_paths import *
+
 '''
 compute the crops and masks for the images
 
@@ -23,11 +25,11 @@ run this if you want to introduce new classes
 datatypes = "val2017 train2017".split()
 
 for dataType in datatypes:
-    dataDir = '../res'
+    # data_dir = 'C:/Users/raffc/Downloads/coco2017'
     # dataType = 'val2017'
-    annFile = '{}/annotations/instances_{}.json'.format(dataDir, dataType)
-    processed_images_path = "{}/{}_processed_images".format(dataDir, dataType)
-    processed_masks_path = "{}/{}_processed_masks".format(dataDir, dataType)
+    annFile = '{}/annotations/instances_{}.json'.format(data_dir, dataType)
+    processed_images_path = "{}/{}_processed_images".format(data_dir, dataType)
+    processed_masks_path = "{}/{}_processed_masks".format(data_dir, dataType)
 
     # initialize COCO api for instance annotations
     coco = COCO(annFile)
@@ -85,7 +87,7 @@ for dataType in datatypes:
         '''
 
         img = coco.loadImgs(image_id)[0]
-        pixels = io.imread("{}/{}/{}".format(dataDir, dataType, img['file_name']))
+        pixels = io.imread("{}/{}/{}".format(data_dir, dataType, img['file_name']))
 
 
 
