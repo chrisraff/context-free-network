@@ -62,8 +62,8 @@ def get_random_background_image(img_h, img_w, img_c):
 
         if max(w, h) < 2 * min(w, h):
             break
-        else:
-            print(w, h, max(w, h), 2 * min(w, h))
+        # else:
+        #     print(w, h, max(w, h), 2 * min(w, h))
 
     bg = template_pixels[y:y+h, x:x+w, :]
     bg = imresize(bg, (img_h, img_w), mode='reflect', preserve_range=True)

@@ -95,7 +95,7 @@ if __name__ == '__main__':
     print('Training a "{}" classifier'.format(args.mode))
 
     tensify = T.Compose([
-        T.ToTensor()
+        T.ToTensor(),
     ])
 
     trainset = dset.ImageFolder('{}/{}'.format(data_dir, train_dir), tensify)
@@ -168,7 +168,7 @@ if __name__ == '__main__':
 
     model = model.to(device=device)
 
-    epochs = 4
+    epochs = 12
 
 
     learning_rate = 5e-6
@@ -269,7 +269,7 @@ if __name__ == '__main__':
         if args.mode != 'normal':
             check_accuracy(valfullset_loader, model)
         print()
-        
+
         import time
         timestr = time.strftime("%Y-%m-%d--%H-%M-%S")
         fname = "../models/model_{}_{}.nn".format(args.mode, timestr)
