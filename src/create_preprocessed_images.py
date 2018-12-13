@@ -122,7 +122,7 @@ for dataType in datatypes:
             object_coverage = np.sum(mask) / np.prod(cropped_mask.shape)
 
             # ignore images that take up too little or too much of the cropped image
-            if not 0.1 < object_coverage < 0.95zzzz:
+            if not 0.1 < object_coverage < 0.95:
                 continue
 
             # normalize the width and height of the image and the mask
