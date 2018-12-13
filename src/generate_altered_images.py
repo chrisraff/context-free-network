@@ -84,8 +84,8 @@ def black_background(image, mask):
 
 
 def random_background(image, mask):
-    assert mask.max() == 1, mask.max()
-    assert image.max() > 1, image.max()  # expecting up to 255
+    # assert mask.max() == 1, mask.max()
+    # assert image.max() > 1, image.max()  # expecting up to 255
 
     mask = mask[:,:,np.newaxis]
 
@@ -107,8 +107,8 @@ def only_background(image, mask):
     return output_image, "_only_background"
 
 def template_background(image, mask):
-    assert mask.max() == 1, mask.max()
-    assert image.max() > 1, image.max()  # expecting up to 255
+    # assert mask.max() == 1, mask.max()
+    # assert image.max() > 1, image.max()  # expecting up to 255
 
     mask = mask[:,:,np.newaxis]
 
