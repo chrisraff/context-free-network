@@ -28,8 +28,8 @@ for dataType in datatypes:
     # data_dir = 'C:/Users/raffc/Downloads/coco2017'
     # dataType = 'val2017'
     annFile = '{}/annotations/instances_{}.json'.format(data_dir, dataType)
-    processed_images_path = "{}/{}_processed_images".format(data_dir, dataType)
-    processed_masks_path = "{}/{}_processed_masks".format(data_dir, dataType)
+    processed_images_path = "{}/{}_context_only".format(data_dir, dataType)
+    # processed_masks_path = "{}/{}_processed_masks".format(data_dir, dataType)
 
     # initialize COCO api for instance annotations
     coco = COCO(annFile)
@@ -42,7 +42,7 @@ for dataType in datatypes:
         category_name_dict[category['id']] = category['name']
 
         # make folders for classes
-        for output_dir in [processed_images_path, processed_masks_path]:
+        for output_dir in [processed_images_path]:
             os.makedirs('{}/{}'.format(output_dir, category['name']), exist_ok=True)
     # category_names = [cat['name'] for cat in categories]
     # print('COCO categories: \n{}\n'.format(' '.join(category_names)))
@@ -87,7 +87,7 @@ for dataType in datatypes:
         '''
 
         img = coco.loadImgs(image_id)[0]
-        pixels = io.imread("{}/{}/{}".format(data_dir, dataType, img['file_name']))
+        original_pixels = io.imread("{}/{}/{}".format(data_dir, dataType, img['file_name']))
 
 
 
@@ -95,6 +95,8 @@ for dataType in datatypes:
         anns = coco.loadAnns(annIds)
         # for each json blob (bounding box annotation)
         for obj in anns:
+            pixels = np.copy(original_pixels)
+
             if obj['category_id'] not in target_class_ids:
                 continue
 
@@ -135,26 +137,30 @@ for dataType in datatypes:
 
             # ignore images with 1 class that fills up the whole image
             total_image_object_coverage = (w*h) / (pixels.shape[0]*pixels.shape[1])
-            if 0.9 > total_image_object_coverage:
+            if total_image_object_coverage > 0.9:
+                # print("skipping 1")
                 continue
 
             # ignore images that take up too little or too much of the cropped image
             cropped_image_object_coverage = (w*h) / (cropped_image.shape[0]*cropped_image.shape[1])
             if not (0.1 < cropped_image_object_coverage < 0.9):
+                # print("skipping 2")
                 continue
 
             # created the cropped mask
-            cropped_mask = np.zeros_like(cropped_image)
+            # cropped_mask = np.zeros_like(cropped_image)
             start_x = int(w*border_proportion)
             end_x = int(start_x + w)
             start_y = int(h*border_proportion)
             end_y = int(start_y + h)
-            cropped_mask[start_x:end_x, start_y:end_y] = 1
+            # cropped_mask[start_x:end_x, start_y:end_y] = 1
 
-            # get the mask
-            rle = maskutils.frPyObjects(obj['segmentation'], *pixels.shape[:2])
-            mask = maskutils.decode(rle)
-            cropped_mask = mask[x:x+w, y:y+h,0]
+            cropped_image[start_x:end_x, start_y:end_y] = 0
+
+            # # get the mask
+            # rle = maskutils.frPyObjects(obj['segmentation'], *pixels.shape[:2])
+            # mask = maskutils.decode(rle)
+            # cropped_mask = mask[x:x+w, y:y+h,0]
 
 
             # object_coverage = np.sum(mask) / np.prod(cropped_mask.shape)
@@ -167,7 +173,8 @@ for dataType in datatypes:
             # normalize the width and height of the image and the mask
             output_size = 224
             final_img = imresize(cropped_image, (output_size,output_size))
-            final_mask = imresize(cropped_mask, (output_size,output_size), order=0, preserve_range=True)
+            # final_mask = imresize(cropped_mask, (output_size,output_size), order=0, preserve_range=True)
+
 
             # # the image with the background zeroed out using the mask (useful for later)
             # alignment_test_img = final_img * final_mask[:,:,np.newaxis]
@@ -181,9 +188,10 @@ for dataType in datatypes:
             image_path = "{}/{}/{}.jpg".format(processed_images_path, category_name_dict[category_id], image_name)
             scipy.misc.toimage(final_img, cmin=0.0, cmax=1.0).save(image_path)
 
-            # save the mask
-            mask_path = "{}/{}/{}.jpg".format(processed_masks_path, category_name_dict[category_id], image_name)
-            scipy.misc.toimage(final_mask, cmin=0.0, cmax=1.0).save(mask_path)
+            # # save the mask
+            # mask_path = "{}/{}/{}.jpg".format(processed_masks_path, category_name_dict[category_id], image_name)
+            # scipy.misc.toimage(final_mask, cmin=0.0, cmax=1.0).save(mask_path)
+
 
         return
 
