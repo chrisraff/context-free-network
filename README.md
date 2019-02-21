@@ -2,6 +2,10 @@
 Exploring the effects of context in image classification
 
 
+# Report PDF
+[View the full write-up here](https://raw.github.com/chrisraff/context-free-network/blob/master/682_Final_Report.pdf)
+
+
 ## Instructions
 1. Download the data and add it to `res/` directory. Your directory tree should look like this:
 ```
@@ -17,11 +21,6 @@ context-free-network/
 2. `cd` into `src/`
 3. Run `make`
 4. Run `jupyter notebook`
-
-
-## To Do
-make the "val2017" part come at the end of the folder name, so the folders group semantically
-
 
 
 ## Resources
